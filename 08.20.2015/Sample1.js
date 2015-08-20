@@ -76,19 +76,13 @@
                     dataTextField: "Text",
                     dataValueField: "Value",
                     value: origUmbrellaCompanyId,
+                    optionLabel: "-- Select --",
                     change: function (e) {
 
                         setScheduledBusinessTypeVisibility();
                     }
                 });
-                if (origUmbrellaCompanyId != "")
-                {
-                        var dropdownlist = $("#ScheduledUmbrellaCompanyId").data("kendoDropDownList");
-                        dropdownlist.select(function (dataItem) {
-                            return dataItem.Value === "1";
-                        });
-                }
-
+                
                 $("#ScheduledVATRegistered").prop("checked", $("#VATRegistered").prop("checked"));
                 $("#ScheduledVATDeRegistrationDate").val($("#VATDeRegistrationDate").val());
                 $("#ScheduledVATRegistrationNumber").val($("#VATRegistration").val());
@@ -105,6 +99,14 @@
                 $("#ScheduledOtherUmbrellaCompanyName").val($("#OtherUmbrellaCompanyName").val());
                 $("#ScheduledOtherUmbrellaContactEmail").val($("#OtherUmbrellaContactEmail").val());
                 $("#ScheduledOtherUmbrellaContactName").val($("#OtherUmbrellaContactName").val());
+                
+                if (origUmbrellaCompanyId != "") {
+                    var dropdownlist = $("#ScheduledUmbrellaCompanyId").data("kendoDropDownList");
+                    dropdownlist.select(function (dataItem) {
+                        return dataItem.Value === origUmbrellaCompanyId;
+                    });
+
+                }
 
 
                 setScheduledBusinessTypeVisibility();
@@ -285,7 +287,7 @@
                     $("#ScheduledVATRegistrationNumber").blur(function () {
                         var val = $("#ScheduledVATRegistrationNumber").kendoValidator().data("kendoValidator");
                         var val1 = $("#ScheduledVATRegistrationNumber").val();
-                        // alert(val1);
+                        
                         if (val.validate()) {
                             if (val1 > 0) {
                                 $("#status").text("");
@@ -313,7 +315,7 @@
                     $("#ScheduledLimitedCompanyNumber").blur(function () {
                         var val = $("#ScheduledLimitedCompanyNumber").kendoValidator().data("kendoValidator");
                         var val1 = $("#ScheduledLimitedCompanyNumber").val();
-                        // alert(val1);
+                        
                         if (val.validate()) {
                             if (val1 > 0) {
                                 $("#LLPStatus").text("");
@@ -341,7 +343,7 @@
                                 return true;
                             }
                             else {
-                                $("#dateStatus").text("Please Choose Scheduled Date Vat Registered").css('color', 'red');
+                                $("#dateStatus").text("Please Choose Date Vat Registered").css('color', 'red');
                                 return false;
                             }
 
@@ -362,7 +364,7 @@
                                 return true;
                             }
                             else {
-                                $("#dateDstatus").text("Please Choose Scheduled Date Vat Registered").css('color', 'red');
+                                $("#dateDstatus").text("Please Choose Date Vat Registered").css('color', 'red');
                                 return false;
                             }
 
@@ -374,12 +376,6 @@
 
                         }
                     });
-
-
-
-
-
-
                 }
 
 
@@ -401,7 +397,7 @@
                                     $("#dateDstatus").text("");
                                 }
                                 else {
-                                    $("#dateDstatus").text("Please Choose Scheduled Date VatDE Registered").css('color', 'red');
+                                    $("#dateDstatus").text("Please Choose Date VatDE Registered").css('color', 'red');
                                     return false;
                                 }
                             }
@@ -419,7 +415,7 @@
                                     $("#dateStatus").text("");
                                 }
                                 else {
-                                    $("#dateStatus").text("Please Choose Scheduled Date Vat Registered").css('color', 'red');
+                                    $("#dateStatus").text("Please Choose Date Vat Registered").css('color', 'red');
                                     return false;
                                 }
                             }
@@ -429,6 +425,16 @@
                             }
                         }
                         
+                    }
+                    else if (varBusinessTypeId == 3)
+                    {
+                        if ($("#ScheduledUmbrellaCompanyId").val() == "")
+                        {
+                            $("#umbrellaCompanyIdStatus").text("Please Choose Umbrella Company").css('color', 'red');
+                            return false;
+                        }
+                            
+                            
                     }
                     var isValid = validator.validate();
 
@@ -463,6 +469,7 @@
                     catch (e) {
                         // isValid = false;
                     }
+                    
                     var change =
                             { "ID": AssociateId ,
                                 "BusinessTypeId" :$("#ScheduledBusinessTypeId").val() ,
@@ -478,7 +485,7 @@
                                "RegistedCompanyBankAcctSort" :$("#ScheduledRegistedCompanyBankAcctSort").val() ,
                                "RegistedCompanyBankAcctNumber" :$("#ScheduledRegistedCompanyBankAcctNumber").val() ,
                                "OptOutSelfBilling" :($('input:radio[name=ScheduledOptOutSelfBilling]:checked').length > 0 ? $('input:radio[name=ScheduledOptOutSelfBilling]:checked').val():"") ,
-                               "UmbrellaCompanyId": $('#ScheduledUmbrellaCompanyId').val(),
+                               "UmbrellaCompanyId":($("#ScheduledBusinessTypeId").val()==3 ?  $('#ScheduledUmbrellaCompanyId').val():""),
                                "OtherUmbrellaCompanyName" :$("#ScheduledOtherUmbrellaCompanyName").val() ,
                                "OtherUmbrellaContactEmail" :$("#ScheduledOtherUmbrellaContactEmail").val() ,
                                 "OtherUmbrellaContactName" :$("#ScheduledOtherUmbrellaContactName").val() };
@@ -526,22 +533,14 @@ function createTaskForAssScheduledChange(associateId, scheduledDate, field, valu
     });
 }
 function setScheduledBusinessTypeVisibility() {
+    $("#umbrellaCompanyIdStatus").text("");
     var businessTypeId = $('#ScheduledBusinessTypeId').val();
     var umbrellaCompanyId = $('#ScheduledUmbrellaCompanyId').val();
     var vatRegInfoRequired;
+    
     if ((businessTypeId === "3")) {
 
         $("#ScheduledUmbrellaList, #ScheduledUmbrellaCompany").show();
-        if ($('#ScheduledUmbrellaCompanyId').val() == "")
-        {
-            
-            var dropdownlist = $("#ScheduledUmbrellaCompanyId").data("kendoDropDownList");
-            dropdownlist.select(function (dataItem) {
-                return dataItem.Value === "1";
-            });
-            umbrellaCompanyId = $('#ScheduledUmbrellaCompanyId').val();
-            
-        }
         if (umbrellaCompanyId === "1") {
             $("#ScheduledUmbrellaOther").show();
         } else {
