@@ -1,0 +1,193 @@
+﻿
+<div id="BusinessTypeChange">
+    <form id="form_BusinessTypeChange">
+      
+        
+            @*<div class="editor-label">
+                Scheduled
+                <input type="text" class="ScheduledDate datepicker" onkeydown="return false;" />
+            </div>*@
+
+
+        <div id="Scheduled">
+            <div class="editor-label">
+                <label class="field-required-for-submit"> Scheduled</label>
+
+            </div>
+            <div class="editor-field">
+                <input type="text" class="ScheduledDate datepicker" onkeydown="return false;" />
+            </div>
+            <div style="clear: left">
+            </div>
+        </div>
+
+
+        <div class="editor-label" style="padding-top:10px">
+            BusinessType
+        </div>
+        <div class="editor-field">
+            <div id="BusinessTypeFieldContainer">
+            </div>
+        </div>
+        <div id="ScheduledLtdCompanySection">
+            <div class="editor-label" style="margin-top: 0">
+                VAT Registered
+            </div>
+            <div class="editor-field">
+                <input type='checkbox' id='ScheduledVATRegistered' onchange="ScheduledVATRegisteredChanged()" />
+                <input id="SchVatRegInfoRequired" name="SchVatRegInfoRequired" type="hidden" />
+            </div>
+            <div style="clear: left">
+            </div>
+            <div id="ScheduledVATDeRegistration">
+                <div class="editor-label">
+                    <label class="field-required-for-submit">Date VatDeRegistered</label>
+
+                </div>
+                <div class="editor-field">
+                    <input type='text' id="ScheduledVATDeRegistrationDate" name="ScheduledVATDeRegistrationDate" class="datepicker" data-vatderegdate-msg="This field is required" />
+                </div>
+                <div id="dateDstatus" />
+                <div style="clear: left">
+                </div>
+            </div>
+            <div id="ScheduledVATRegistration" style="display: none;">
+                <div class="editor-label" style="margin-top: 0">
+                    <label class="field-required-for-submit" for="ScheduledVATRegistrationNumber">VAT Registration Number</label>
+                </div>
+                <div class="editor-field">
+                    <input class="k-textbox" min="0" maxlength="9"  id="ScheduledVATRegistrationNumber" name="ScheduledVATRegistrationNumber" type="text" data-vatregnumb-msg="This field is required">
+                   </div>
+                <div id="status"/>
+                    <div style="clear: left">
+                    </div>
+                    <div class="editor-label">
+                        <label class="field-required-for-submit">Date Registered for VAT</label>
+                    </div>
+                    <div class="editor-field">
+                        <input type='text' id="ScheduledDateVatRegistered" name="ScheduledDateVatRegistered" class="datepicker" data-vatregdate-msg="This field is required" />
+                    </div>
+                <div id="dateStatus"/>
+                   
+                </div>
+            <div style="clear: right">
+            </div>
+            <div class="editor-label">
+                Sage Id
+            </div>
+            <div class="editor-field">
+                <input class="k-textbox" id="ScheduledSageId" name="ScheduledSageId" type="text">
+
+            </div>
+            <div class="editor-label">
+                <label class="field-required-for-submit">Ltd/LLP Name</label>
+            </div>
+            <div class="editor-field">
+                <input class="k-textbox" id="ScheduledRegisteredCompanyName" name="ScheduledRegisteredCompanyName" data-LLPName-msg="Enter LLP Name" type="text" maxlength="50">
+            </div>
+            <div style="clear: left">
+            </div>
+            <div class="editor-label">
+                <label class="field-required-for-submit">Ltd/LLP Address</label>
+            </div>
+            <div class="editor-field">
+                <textarea class="k-textbox" id="ScheduledRegisteredCompanyAddress" name="ScheduledRegisteredCompanyAddress" data-llpaddress-msg="Enter LLp Address" maxlength="255"></textarea>
+            </div>
+            <div style="clear: left">
+            </div>
+            <div class="editor-label" >
+                <label class="field-required-for-submit">Ltd/LLP Reg Number</label>
+            </div>
+              
+                    <div class="editor-field">
+                        <input class="k-textbox" min="0" maxlength="7" id="ScheduledLimitedCompanyNumber" name="ScheduledLimitedCompanyNumber" data-llpregnum-msg="Enter Reg Number" type="text">
+                    </div>
+           
+                <div id="LLPStatus" align="center"/>
+                    <div style="clear:right">
+                    </div>
+            
+                    <div class="editor-label">
+                        Ltd/LLP Acct Name
+                    </div>
+                    <div class="editor-field">
+                        <input class="k-textbox" maxlength="50" id="ScheduledRegistedCompanyBankAcctName" name="ScheduledRegistedCompanyBankAcctName" type="text">
+
+                    </div>
+                    <div style="clear: left">
+                    </div>
+                    <div class="editor-label">
+                        Ltd/LLP Sort Code
+                    </div>
+                    <div class="editor-field">
+                        <input class="k-textbox" maxlength="6" id="ScheduledRegistedCompanyBankAcctSort" name="ScheduledRegistedCompanyBankAcctSort" type="text">
+                    </div>
+                    <div style="clear: left">
+                    </div>
+                    <div class="editor-label">
+                        Ltd/LLP Acct Number
+                    </div>
+                    <div class="editor-field">
+                        <input class="k-textbox valid" maxlength="8" id="ScheduledRegistedCompanyBankAcctNumber" name="ScheduledRegistedCompanyBankAcctNumber" type="text">
+                    </div>
+                    <div style="clear: left">
+                    </div>
+                    <div class="editor-label">
+                        Opt Out of Self Billing
+                    </div>
+
+                    <div class="editor-field">
+                        <span style="color: #000">Opt In</span>&nbsp;<input id="ScheduledOptOutSelfBilling" name="ScheduledOptOutSelfBilling" type="radio" value="False">
+                        <span style="color: #000">Opt Out</span>&nbsp;<input id="ScheduledOptOutSelfBilling" name="ScheduledOptOutSelfBilling" type="radio" value="True">
+                    </div>
+
+                    <div style="clear: left">
+                    </div>
+
+
+                </div>
+
+        <div id="ScheduledUmbrellaList" style="display: none;">
+            <div class="editor-label">
+                <label class="field-required-for-submit">Umbrella Company</label>
+            </div>
+            <div class="editor-field" id="UmbrellaCompanyFieldContainer">
+            </div>
+            <div style="clear: left">
+            </div>
+        </div>
+        <div id="ScheduledUmbrellaOther" style="display: none;">
+            <div class="editor-label" style="margin-top: 0">
+                <label class="field-required-for-submit">Comp Name</label>
+            </div>
+            <div class="editor-field">
+                <input class="k-textbox" maxlength="50" id="ScheduledOtherUmbrellaCompanyName" name="ScheduledOtherUmbrellaCompanyName" type="text" data-umbcompname-msg="Enter Umbrella Company Name">
+            </div>
+            <div style="clear: left">
+            </div>
+            <div class="editor-label">
+                <label class="field-required-for-submit">Comp Contact Email</label>
+            </div>
+            <div class="editor-field">
+                <input class="k-textbox" id="ScheduledOtherUmbrellaContactEmail" name="ScheduledOtherUmbrellaContactEmail" type="email" data-umbcompemail-msg="Enter Umbrella Company Email">
+            </div>
+            <div style="clear: left">
+            </div>
+            <div class="editor-label">
+                <label class="field-required-for-submit">Comp Contact Name</label>
+            </div>
+            <div class="editor-field">
+                <input class="k-textbox" id="ScheduledOtherUmbrellaContactName" name="ScheduledOtherUmbrellaContactName" type="text" maxlength="80" data-umbcompcontname-msg="Enter Umbrella Company Contact Name">
+            </div>
+            <div style="clear: left">
+            </div>
+        </div>
+
+        <div class="buttons-container" style="clear: both; margin: 10px 0; text-align: right;">
+
+            <button id="btnCreateScheduledChange" type="button" value="Ok" class="submit-button btn-slim">Save</button>
+            <button id="btnCreateScheduledCancel" type="button" value="Cancel" class="submit-button btn-slim">Close</button>
+        </div>
+    </form>
+
+</div>
