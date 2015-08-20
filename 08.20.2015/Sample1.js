@@ -68,7 +68,6 @@
                     }
                 });
                 var origUmbrellaCompanyId = $("#UmbrellaCompanyId").val();
-
                 var input1 = $("<input type='text' id='ScheduledUmbrellaCompanyId' />");
                 $("#UmbrellaCompanyFieldContainer").append(input1);
                 $(input1).kendoDropDownList({
@@ -82,8 +81,13 @@
                         setScheduledBusinessTypeVisibility();
                     }
                 });
-
-
+                if (origUmbrellaCompanyId != "")
+                {
+                        var dropdownlist = $("#ScheduledUmbrellaCompanyId").data("kendoDropDownList");
+                        dropdownlist.select(function (dataItem) {
+                            return dataItem.Value === "1";
+                        });
+                }
 
                 $("#ScheduledVATRegistered").prop("checked", $("#VATRegistered").prop("checked"));
                 $("#ScheduledVATDeRegistrationDate").val($("#VATDeRegistrationDate").val());
@@ -459,7 +463,6 @@
                     catch (e) {
                         // isValid = false;
                     }
-                   
                     var change =
                             { "ID": AssociateId ,
                                 "BusinessTypeId" :$("#ScheduledBusinessTypeId").val() ,
@@ -475,7 +478,7 @@
                                "RegistedCompanyBankAcctSort" :$("#ScheduledRegistedCompanyBankAcctSort").val() ,
                                "RegistedCompanyBankAcctNumber" :$("#ScheduledRegistedCompanyBankAcctNumber").val() ,
                                "OptOutSelfBilling" :($('input:radio[name=ScheduledOptOutSelfBilling]:checked').length > 0 ? $('input:radio[name=ScheduledOptOutSelfBilling]:checked').val():"") ,
-                               "UmbrellaCompanyId": $("#ScheduledUmbrellaCompanyId").val(),
+                               "UmbrellaCompanyId": $('#ScheduledUmbrellaCompanyId').val(),
                                "OtherUmbrellaCompanyName" :$("#ScheduledOtherUmbrellaCompanyName").val() ,
                                "OtherUmbrellaContactEmail" :$("#ScheduledOtherUmbrellaContactEmail").val() ,
                                 "OtherUmbrellaContactName" :$("#ScheduledOtherUmbrellaContactName").val() };
@@ -529,6 +532,16 @@ function setScheduledBusinessTypeVisibility() {
     if ((businessTypeId === "3")) {
 
         $("#ScheduledUmbrellaList, #ScheduledUmbrellaCompany").show();
+        if ($('#ScheduledUmbrellaCompanyId').val() == "")
+        {
+            
+            var dropdownlist = $("#ScheduledUmbrellaCompanyId").data("kendoDropDownList");
+            dropdownlist.select(function (dataItem) {
+                return dataItem.Value === "1";
+            });
+            umbrellaCompanyId = $('#ScheduledUmbrellaCompanyId').val();
+            
+        }
         if (umbrellaCompanyId === "1") {
             $("#ScheduledUmbrellaOther").show();
         } else {
