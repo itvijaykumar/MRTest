@@ -1,4 +1,6 @@
 Sample1.cshtml 		Phase3\Admin\Views\Associate\BusinessTypeChange.cshtml
 Sample1.js		Phase3\Admin\Scripts\Associate\AssociateScheduledChange.js
-Sample1.cs		Phase3\Admin\Services\AssociateServices.cs
-
+Service1.cs		Phase3\Admin\Services\AssociateServices.cs
+Service2.cs		Phase3\MR_DAL\TimeSheet\Repository\TimeSheetRepository.cs
+ScriptSQL1.sql		BackDateAssociateChanges.sql
+ScriptSQL2.sql		UpdateAssociateFieldSingle.sql	

@@ -764,8 +764,12 @@ namespace Admin.Services
             {
                 associate.OptOutSelfBilling = null;}
             else { associate.OptOutSelfBilling = bool.Parse(updates["OptOutSelfBilling"]); }
+            if (updates["UmbrellaCompanyId"] == "")
+            {
+                associate.UmbrellaCompanyId = null;
+            }
+            else { associate.UmbrellaCompanyId = byte.Parse(updates["UmbrellaCompanyId"]); }
             
-            associate.UmbrellaCompanyId= byte.Parse(updates["UmbrellaCompanyId"]);
             associate.OtherUmbrellaCompanyName= updates["OtherUmbrellaCompanyName"];
             associate.OtherUmbrellaContactEmail = updates["OtherUmbrellaContactEmail"];
             associate.OtherUmbrellaContactName = updates["OtherUmbrellaContactName"];
