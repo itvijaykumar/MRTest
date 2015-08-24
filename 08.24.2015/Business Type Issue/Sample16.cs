@@ -24,19 +24,26 @@ namespace MomentaRecruitment.Common.Services.Scheduler
 
         public IEnumerable<GenericField> ConvertToObject()        
         {
-            List<GenericField> jsonResult = SerialiseJson();          
-            // It should be only one taskId per actions.
-           // IEnumerable<int> list = _individualRepository.GetIndividualIds(jsonResult.First().TaskId);
+            List<GenericField> jsonResult = SerialiseJson();
+            if (_jsonVal.IndexOf("AssId")>-1)
+            {
+                return jsonResult;
+            }
+            else
+            {
+                // It should be only one taskId per actions.
+                IEnumerable<int> list = _individualRepository.GetIndividualIds(jsonResult.First().TaskId);
 
-            //if(jsonResult != null && jsonResult.Count > 0 && (list == null || list.Count() == 0))       
-            //    throw new SchedulerException("Task doesn't have associated individual id.");
-           
-            //List<GenericField> output = new List<GenericField>();
-            //jsonResult.ForEach(x =>                
-            //    {
-            //        output.Add(new GenericField(){AssId = y, Field = x.Field, Value = x.Value, TaskId = x.TaskId}));
-            //    });
-            return jsonResult;
+                if (jsonResult != null && jsonResult.Count > 0 && (list == null || list.Count() == 0))
+                    throw new SchedulerException("Task doesn't have associated individual id.");
+
+                List<GenericField> output = new List<GenericField>();
+                jsonResult.ForEach(x =>
+                {
+                    list.ToList().ForEach(y => output.Add(new GenericField() { IndId = y, Field = x.Field, Value = x.Value, TaskId = x.TaskId }));
+                });
+                return output;
+            }
         }
 
         private List<GenericField> SerialiseJson()
