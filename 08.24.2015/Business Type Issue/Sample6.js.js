@@ -268,6 +268,25 @@
                     return input.data("message");
                 }
 
+                $("#BusinessTypeChange .ScheduledDate").blur(function () {
+                    var vatSchDateVal = scheduledDatePicker.value();
+                    
+                    if (vatSchDateVal == null )
+                    {
+                        $("#errSchDatestatus").text("Please Choose Scheduled Date").css('color', 'red');
+                        return false;
+                    }
+                                        
+                    else if (vatSchDateVal != "") {
+                            $("#errSchDatestatus").text("");
+                            return true;
+                    }
+                    else {
+                        $("#errSchDatestatus").text("Please Choose Scheduled Date").css('color', 'red');
+                        return false;
+                    }
+                    
+                });
                 var varBusinessTypeId = $("#ScheduledBusinessTypeId").val();
                 if (varBusinessTypeId == 1) {
                     $("#ScheduledVATRegistrationNumber").keypress(function (e) {
