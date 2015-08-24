@@ -80,7 +80,7 @@
                 $("#ScheduledVATDeRegistrationDate").val($("#VATDeRegistrationDate").val());
                 $("#ScheduledVATRegistrationNumber").val($("#VATRegistration").val());
                 $("#ScheduledDateVatRegistered").val($("#DateVatRegistered").val());
-                $("#ScheduledSageId").val($("#SageId").val());
+               
                 $("#ScheduledRegisteredCompanyName").val($("#RegisteredCompanyName").val());
                 $("#ScheduledRegisteredCompanyAddress").val($("#RegisteredCompanyAddress").val());
                 $("#ScheduledLimitedCompanyNumber").val($("#LimitedCompanyNumber").val());
@@ -537,7 +537,6 @@
                { field: 'DateVatDeRegistered', value: varVATdeRegisteredDate, AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
                { field: 'VATRegistration', value: $("#ScheduledVATRegistrationNumber").val(), AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
                { field: 'DateVatRegistered', value: varVATRegDate, AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
-               { field: 'SageId', value: $("#ScheduledSageId").val(), AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
                { field: 'RegisteredCompanyName', value: $("#ScheduledRegisteredCompanyName").val(), AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
                { field: 'RegisteredCompanyAddress', value: $("#ScheduledRegisteredCompanyAddress").val(), AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
                { field: 'LimitedCompanyNumber', value: $("#ScheduledLimitedCompanyNumber").val(), AssId: varAssId, taskId: 'TASKIDPLACEHOLDER' },
