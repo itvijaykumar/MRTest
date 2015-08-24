@@ -1,0 +1,135 @@
+﻿@model Admin.Models.ICommentableItem
+@{
+    string buttonCaption = ViewBag.CommentHistoryButtonCaption ?? "Add comment";
+    var varComments = Model.Comments.OrderByDescending(a => a.CreatedTime);
+    
+    var varItemsCount = Model.Comments.Count();
+}
+<script>
+    var varEmployeesList=@Html.Raw(Json.Encode(ViewBag.MomentaEmployeeList));
+  
+
+</script>
+<div>
+    <div class="single-col">
+        <textarea name="Notes" id="Notes" rows="4" cols="100" maxlength="500" style="width: 90%;
+height: 60px; min-height: 60px;margin: 5px 0;"></textarea>
+<br/>                                    
+        <button type="button" onclick="addNotes(this, @Model.Id); return false;" class="btn-submit btn-slim">
+            @buttonCaption
+        </button>
+        <br/><br />
+        <div id="CommentHistory" style="width: 90%; "></div>
+    </div>
+    <div class="clear">
+    </div>
+</div>
+<div class="clear">
+</div>
+<script>
+    $(document).ready(function () {
+        var varData=@Html.Raw(Json.Encode(varComments));
+
+        
+        function GetCommentText(container, options) {
+
+            var commentText = container.Text;
+            
+            if (container.Text != "") {
+                commentText= container.Text.length>110 ? container.Text.substring(1, 110)+"..." : container.Text;
+            }
+            return commentText;
+        }
+        function GetCommentUser(container, options) {
+
+            var commentUser = "";
+            
+            if (container.User != "") {
+                $.each(varEmployeesList, function()
+                {
+                    var testObject = this; 
+                    if (testObject.Value == container.User)
+                    {
+                        commentUser=testObject.Text;
+                    }
+                    
+                });
+
+            }
+            return commentUser;
+        }
+        $("#CommentHistory").kendoGrid({
+            dataSource: {
+                data: varData,
+                pageSize: 5,
+                schema: {
+                    model: {
+                        id: "AssociateCommunicationId",
+                        fields: {
+                            User: { type: "string" },
+                            CreatedTime: { type: "date" },
+                            Text: { type: "string" }
+                        }
+                    }
+                }
+            },
+            autobind:false,
+            groupable: false,
+            sortable: true,
+            pageable: {
+                refresh: false,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [
+                        {title: "User", field: "User", width:"150px", template:GetCommentUser},
+                        {title: "Date", field: "CreatedTime", format: "{0:dd/MM/yyyy}",  width:"100px"},
+                        {title: "Time", field: "CreatedTime", format: "{0:HH:mm}", width:"100px"},
+                        {title: "Comment",field: "Text", template:GetCommentText},
+                        {
+                            field: "Action", title: "Action", width: "50px", command: [
+                              { name: "View", text: " ", click: viewComments }
+                            ]
+                        }
+            ]
+                  
+        });
+        
+        function viewComments(e) {
+            var uid = $(e.currentTarget).closest("tr:parent").data("uid");
+            var grid = null;
+            var dataRow;
+            var grid = $($("#CommentHistory")).data("kendoGrid");
+            dataRow= grid.dataSource.getByUid(uid);
+            
+            var template = kendo.template(
+                "<table width=\"300\">" +
+                "<tr><td>User</td><td>#= User #</td></tr>" +
+                "<tr><td>Date</td><td>#= Date #</td></tr>" +
+                "<tr><td>Time</td><td>#= Time #</td></tr>" +
+                "<tr><td>Comment</td><td>#= Comment #</td></tr>" +
+                "</table>");
+            var commentUser="";
+            $.each(varEmployeesList, function()
+            {
+                var testObject = this; 
+                if (testObject.Value == dataRow.User)
+                {
+                    commentUser=testObject.Text;
+                }
+                    
+            });
+            var data = {
+                User: commentUser,
+                Date: kendo.toString(dataRow.CreatedTime,'dd/MM/yyyy'),
+                Time: kendo.toString(dataRow.CreatedTime,'HH:mm'),
+                Comment: dataRow.Text
+            };
+            var html = template(data);
+
+            Alert(html, "Comment Details");
+
+        }
+
+    }); // end ready
+    </script>

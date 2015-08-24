@@ -1,0 +1,20 @@
+Sample1.cs			Phase3\Admin\Controllers\AssociateController.cs
+Sample2.cs			Phase3\Admin\Controllers\SChedulerController.cs
+Sample3.cs			Phase3\Admin\Repositories\AssociateRepository.cs
+Sample4.cs			Phase3\Admin\Repositories\SchedulerRepository.cs		
+Sample5.js			Phase3\Admin\Scripts\Associate\JsonLists.js
+Sample6.js			Phase3\Admin\Scripts\Associate\AssociateScheduledChange.js
+Sample7.js			Phase3\Admin\Scripts\Associate\Details.js
+Sample8.cs			Phase3\Admin\Services\AssociateServices.cs
+Sample9.cs			Phase3\Admin\Services\SchedulerService.cs
+Sample10.cs			Phase3\Admin\Services\SearchService.Associate.cs
+Sample11.cshtml			Phase3\Admin\Views\Associate\BusinessTypeChange.cshtml
+Sample12.cs			Phase3\Common\Repositories\AssociateRepositories.cs
+Sample13.cs			Phase3\Common\Repositories\IndividualRepository.cs
+Sample14.cs			Phase3\Common\Services\AssociateServices.cs
+Sample15.cs			Phase3\Common\Services\Scheduler\ScheduleActionHandler.cs
+Sample16.cs			Phase3\Common\Services\Scheduler\ScheduleParamsHandler.cs
+Sample17.cs			Phase3\Common\Services\Scheduler\ScheduleSingleField.cs
+
+Sample1.sql
+Sample2.sql

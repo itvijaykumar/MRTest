@@ -1,0 +1,24 @@
+Sample1.js	Phase3\AssociatePortal\Scripts\TimeSheet\TimeSheetViewModels.js
+Sample2.js	Phase3\AssociatePortal\Scripts\TimeSheet\Timesheets.js
+Sample3.js	Phase3\AssociatePortal\Scripts\TimeSheet\TimeSheetModels.js
+Sample4.cshtml	Phase3\AssociatePortal\Views\TimeSheet\_TimesheetTemplates.cshtml
+Sample5.cshtml	Phase3\AssociatePortal\Views\AdjustmentTimesheet\AdjustmentTimesheetTemplates.cshtml
+Sample6.js	Phase3\AssociatePortal\Scripts\Bootstrap\bootstrap-editable.js
+Sample7.cs	Phase3\associateportal\controllers\timesheetcontroller.cs
+
+
+Sample8.cs	 Phase3\Admin\controllers\timesheetcontroller.cs
+Sample9.js	 Phase3\Admin\Scripts\Bootstrap\bootstrap-editable.js
+Sample10.js	 Phase3\Admin\Scripts\TimeSheet\Timesheets.js
+Sample11.cshtml	 Phase3\Admin\Views\TimeSheet\_TimesheetTemplates.cshtml
+Sample12.cshtml	 Phase3\Admin\Views\AdjustmentTimesheet\AdjustmentTimesheetTemplates.cshtml
+
+Sample13.cs	Phase3\Common\Services\Timesheet\ITimesheetService.cs
+Sample14.cs	phase3\common\services\timesheet\timesheetservice.cs
+Sample15.cs	Phase3\MR_DAL\TimeSheet\Repository\ITimeSheetRepository.cs
+Sample16.cs	Phase3\mr_dal\timesheet\repository\timesheetrepository.cs
+
+
+
+
+
