@@ -1,0 +1,607 @@
+﻿@using MvcContrib.Pagination
+@using MR_DAL.Enumerations
+@using Kendo.Mvc.UI.Html
+@using Kendo.Mvc.UI
+@using Kendo.Mvc
+@using Admin.Helpers
+@using System.Web.Mvc
+@using System.Web.Optimization
+@using Admin.Models.Search
+@using MomentaRecruitment.Common.Models
+
+@model AssociateSearchModel
+
+@{
+    ViewBag.Title = "Associates";
+}
+
+@section Title {
+    <span class="searching">Search @ViewBag.Title</span>
+}
+
+@section Navigation {
+    @(Html.Kendo().PanelBar()
+        .Name("panelbar-images")
+        .ExpandMode(PanelBarExpandMode.Single)
+        .Items(panelbar =>
+        {
+            panelbar.Add().Text(Navigation.Associates)
+                .ImageUrl(Url.Content("~/Content/images/nav-associates.png"))
+                .Items(associates =>
+                {
+                    var aslst = associates.Add();
+                    aslst.Text(Navigation.AssociateList).SpriteCssClasses("AssociateListSprite");
+
+                    associates.Add().Text(Navigation.CreateAssociate).SpriteCssClasses("CreateAssociateSprite");
+                });
+
+            panelbar.Add().Text(Navigation.Resourcing)
+                .ImageUrl(Url.Content("~/Content/images/nav-resources.png"))
+                .Items(resourcing =>
+                {
+                    resourcing.Add().Text(Navigation.Clients).SpriteCssClasses("ClientsSprite");
+
+                    var rc = resourcing.Add();
+                    rc.Text(Navigation.ResourcingClients).SpriteCssClasses("ResourcingClientsSprite");
+                });
+
+            panelbar.Add().Text(Navigation.Finance)
+                .ImageUrl(Url.Content("~/Content/images/nav-finance.png"))
+                .Items(finance => finance.Add().Text(Navigation.HoldingBay).SpriteCssClasses("ClientsSprite"));
+
+            var srch = panelbar.Add();
+            srch.Text(Navigation.Searching)
+                .ImageUrl(Url.Content("~/Content/images/nav-searching.png"))
+                .Items(search =>
+                {
+                    var assrch = search.Add();
+                    assrch.Text(Navigation.AssociateSearch).Items(asrch =>
+                    {
+                        var ptr = asrch.Add();
+                        ptr.Text(Navigation.ProspectToRole).SpriteCssClasses("ProspectToRoleSprite");
+
+                        var se = asrch.Add();
+                        se.Text(Navigation.SendBulkEmail).SpriteCssClasses("SendBulkEmailSprite");
+
+                        var ss = asrch.Add();
+                        ss.Text(Navigation.SendBulkSMS).SpriteCssClasses("SendBulkSMSSprite");
+                    });
+
+                    assrch.SpriteCssClasses("AssociateSearchSprite");
+
+                    assrch.Expanded(true);
+
+                    var ps = search.Add();
+                    ps.Text(Navigation.ProjectSearch).SpriteCssClasses("ProjectSearchSprite");
+
+                    var rs = search.Add();
+                    rs.Text(Navigation.RequirementSearch).SpriteCssClasses("RequirementSearchSprite");
+
+                    var cs = search.Add();
+                    cs.Text(Navigation.ContactSearch).SpriteCssClasses("ContactSearchSprite");
+
+                    var ds = search.Add();
+                    ds.Text(Navigation.DocumentSearch).SpriteCssClasses("DocumentSearchSprite");
+
+                    var ts = search.Add();
+                    ts.Text(Navigation.TimesheetSearch).SpriteCssClasses("TimesheetSearchSprite");
+
+                    var isrch = search.Add();
+                    isrch.Text(Navigation.InvoiceSearch).SpriteCssClasses("InvoiceSearchSprite");
+
+                    var btc = search.Add();
+                    btc.Text(Navigation.BulkTimesheetChanges).SpriteCssClasses("BulkTimesheetChangesSprite");
+
+                    var gs = search.Add();
+                    gs.Text(Navigation.GraduateSearch).SpriteCssClasses("GraduateSearchSprite");
+                });
+
+            srch.Expanded(true);
+
+            panelbar.Add().Text(Navigation.Reports)
+               .ImageUrl(Url.Content("~/Content/images/nav-reports.png"))
+               .Items(reports =>
+               {
+                   reports.Add().Text(Navigation.ViewReports).SpriteCssClasses("ClientsSprite");
+               });
+
+            panelbar.Add().Text(Navigation.Recent)
+                .ImageUrl(Url.Content("~/Content/images/nav-recent.png"))
+                .Items(associates =>
+                {
+                    associates.Add().Text(Navigation.AssociateList);
+                });
+
+            var onlineLibrary = panelbar.Add();
+
+            onlineLibrary.Text(Navigation.OnlineLibrary)
+                .ImageUrl(Url.Content("~/Content/images/nav-online-library.png"))
+                .Items(lib =>
+                {
+                    var libraryLink = lib.Add();
+                    libraryLink.Text(Navigation.ViewOnlineLibrary).SpriteCssClasses("SOMERANDOMTHING");
+                });
+
+            panelbar.Add().Text(Navigation.Admin)
+                .ImageUrl(Url.Content("~/Content/images/nav-admin.png"))
+                .Items(admin =>
+                {
+                    admin.Add().Text(Navigation.UserAdmin).SpriteCssClasses("UserAdminSprite");
+                    admin.Add().Text(Navigation.UmbrellaUsers).SpriteCssClasses("UmbrellaUsersSprite");
+                    admin.Add().Text(Navigation.Tasks).SpriteCssClasses("TasksSprite");
+                    admin.Add().Text(Navigation.AbsenceMailSettings).SpriteCssClasses("TasksSprite");
+                    admin.Add().Text(Navigation.EmailExclusion).SpriteCssClasses("EmailExclusionSprite");
+                });
+        })
+    )
+}
+
+@section Styles {
+    @Styles.Render("~/bundles/search-css")
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/search-associate-js")
+
+    <script type="text/javascript">
+        /// <reference path="~/Scripts/_references.js" />
+
+        var templateCacheBuster = '@ViewBag.TemplateCacheBuster';
+
+        var statusData = [
+            { text: "Status", value: "-1" },
+            @foreach (var status in Model.Statuses)
+            {
+        @: { text: "@status.Name", value: "@status.Id" },
+                }
+           { text: "Archived", value: "6" }
+        ];
+
+        var noticeIntervalData = [
+            { text: "Interval", value: "-1" },
+            @foreach (var status in Model.NoticeIntervals)
+            {
+        @: { text: "@status.Text", value: "@status.Value" },
+                }
+        ];
+
+        var clientData = [
+            { text: "Client", value: "-1" },
+            @foreach (var client in Model.Clients)
+            {
+            @: { text: "@client.Name", value: "@client.Id" },
+            }
+        ];
+
+        var projectData = [
+            @foreach (var client in Model.Clients)
+            {
+            @: { clientId: "@client.Id", text: "Project", value: "-1" },
+                    foreach (var project in client.Projects)
+                    {
+                @: { clientId: "@client.Id", text: "@project.Name", value: "@project.Id" },
+                    }
+            }
+        ];
+
+        var requirementData = [
+            @foreach (var client in Model.Clients)
+        {
+            foreach (var project in client.Projects)
+            {
+            @: { projectId: "@project.Id", text: "Requirement", value: "-1" },
+                    foreach (var requirement in project.Requirements)
+                    {
+                @: { projectId: "@project.Id", text: "@requirement.Name", value: "@requirement.Id" },
+                    }
+            }
+        }
+        ];
+
+        var roleData = [
+            @foreach (var client in Model.Clients)
+        {
+            foreach (var project in client.Projects)
+            {
+                foreach (var requirement in project.Requirements)
+                {
+                @: { requirementId: "@requirement.Id", text: "Role", value: "-1" },
+                        foreach (var role in requirement.Roles)
+                        {
+                    @: { requirementId: "@requirement.Id", text: "@role.RoleTypeName", value: "@role.Id" },
+                        }
+                }
+            }
+        }
+        ];
+
+        var visaData = [
+            { text: "Visa Type", value: "-1" },
+            @foreach (var visa in Model.VisaTypes)
+        {
+            @: { text: "@visa.Text", value: "@visa.Value" },
+                }
+        ];
+
+        var assessmentTypeData = [
+            { text: "Assessment Type", value: "-1" },
+            @foreach (var at in Model.AssessmentType)
+        {
+            @: { text: "@at.Text", value: "@at.Value" },
+                }
+        ];
+
+        var businessUnitData = [
+            @foreach (var status in Model.BusinessUnit)
+        {
+            @: { text: "@status.Text", value: "@status.Value" },
+                }
+        ];
+
+        var businessAreaData = [
+            @foreach (var area in Model.BusinessArea)
+            {
+                @: { text: "@area.Text", value: "@area.Value" },
+            }
+        ]
+
+    </script>
+}
+
+<div class="search-box">
+    <h2><span>Associate Search</span></h2>
+    <form id="searchForm">
+
+        <ul id="panelbar-search">
+            <li id="panel-all">
+                All
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Free text</div>
+                            <div class="search-field"><input id="FreeText" type="text" class="k-textbox" tabindex="1" /></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li id="panel-personal-info">
+                Personal Information
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">First Name</div>
+                            <div class="search-field"><input id="FirstName" type="text" class="k-textbox" tabindex="2" /></div>
+                        </div>
+                        <div class="search-cell">
+                            <div class="search-label">Email Address</div>
+                            <div class="search-field">
+                                <input type="text" id="EmailAddress" class="k-textbox" tabindex="10" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Last Name</div>
+                            <div class="search-field"><input id="LastName" type="text" class="k-textbox" tabindex="3" /></div>
+                        </div>
+                        <div class="search-cell">
+                            <div class="search-label">Phone Number</div>
+                            <div class="search-field">
+                                <input id="PhoneNumber" type="text" class="k-textbox" tabindex="11" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Associate ID</div>
+                            <div class="search-field"><input id="AssociateId" type="text" class="k-textbox" tabindex="4" /></div>
+                        </div>
+                        <div class="search-cell">
+                            <div class="search-label">CV</div>
+                            <div class="search-field"><textarea rows="3" cols="40" id="CV" type="text" tabindex="9" style="border-color:#dadada; color:#787878;"></textarea></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Associate type</div>
+                            <div class="search-field">
+                                <input id="FullAssociate" type="checkbox" tabindex="5" /><label for="FullAssociate">Associate</label><br />
+                                <input id="AgencyAssociate" type="checkbox" tabindex="6" /><label for="AgencyAssociate">Agency Associate</label><br />
+                                <input id="EmployedAssociate" type="checkbox" tabindex="7" /><label for="EmployedAssociate">Employed</label><br />
+                                <input id="InterimManagementAssociate" type="checkbox" tabindex="8" /><label for="InterimManagementAssociate">Interim Mangement</label>
+                            </div>
+                        </div>
+                        <div class="search-cell">
+                            <div class="search-label"></div>
+                            <div class="search-field"></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Status</div>
+                            <div class="search-field">
+                                <input id="ApprovalStatusId" type="text" tabindex="12" width="200" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Business Unit</div>
+                            <div class="search-field">
+                                <select id="BusinessUnitId" multiple="multiple" data-placeholder="Select business units..."></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Business Area</div>
+                            <div class="search-field">
+                                <select id="BusinessAreaId" multiple="multiple" data-placeholder="Select business areas..."></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                Availability
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">From</div>
+                            <div class="search-field"><input id="AvailableFrom" type="text" tabindex="13" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">To</div>
+                            <div class="search-field"><input id="AvailableTo" type="text" tabindex="14" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Notice Period</div>
+                            <div class="search-field"><input id="NoticePeriod" type="text" class="k-textbox" tabindex="15" /><input id="NoticeIntervalId" type="text" tabindex="16" /></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="search-rate-bar">
+                Rate
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">From</div>
+                            <div class="search-field"><input id="RateFrom" type="text" class="k-textbox" tabindex="16" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">To</div>
+                            <div class="search-field"><input id="RateTo" type="text" class="k-textbox" tabindex="17" /></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                Location
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Postcode</div>
+                            <div class="search-field"><input id="Postcode" type="text" class="k-textbox" tabindex="18" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Miles</div>
+                            <div class="search-field"><input id="Miles" type="text" class="k-textbox" tabindex="19" /></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                Qualifications
+                <div>
+                    <div class="field-group" id="QualificationsFieldGroup">
+                        <div style="margin-top: 10px; display: table; width: 95%" id="QualificationsPanel" class="ExperienceQualificationsPanel">
+                            <div style="display: table-row">
+                                <div id="MarketSectorsQualificationsDiv" class="MarketSectorsDiv td">
+                                    <h2 class="ui-widget-content">
+                                        <b style="margin-left: 23px">Market Sectors</b>
+                                    </h2>
+                                    <div class="instructions"></div>
+                                    <ul>
+                                        @{
+                                            foreach (var marketSector in Model.ExperienceMarketSectors)
+                                            {
+                                                <li class="ui-widget-content selectable" id="@string.Format("MarketSectorsQualificationsListItemSector{0}", marketSector.Value)">
+                                                    <input type="checkbox" name="MarketSectorsQualifications" value="@marketSector.Value" />@marketSector.Text
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                                <div id="QualificationsPanelSpacerDiv1" class="QualificationsPanelSpacerDiv td">
+                                    &nbsp;
+                                </div>
+                                <div id="QualificationsPanelCategoriesDiv" class="td">
+                                    <h2 class="ui-widget-content">
+                                        <b style="margin-left: 23px">Categories</b>
+                                    </h2>
+                                    <div class="instructions"></div>
+                                    @{
+                                        foreach (var sector in Model.QualificationsByCategoryAndSector)
+                                        {
+                                            <ul style="display: none" class="qualificationCategories"
+                                                id="@string.Format("qualificationCategoriesForSector{0}", sector.Key)">
+                                                @foreach (QualificationCategory qualificationCategory in sector.Value)
+                                                {
+                                                    <li class="ui-widget-content selectable">
+                                                        <input type="checkbox"
+                                                               name="qualificationCategories"
+                                                               data-sectorid="@qualificationCategory.MarketSectorId"
+                                                               value="@qualificationCategory.QualificationCategoryId" />
+                                                        @qualificationCategory.Name
+                                                    </li>
+                                                }
+                                                <li class="ui-widget-content selectable">
+                                                    <input type="checkbox"
+                                                           name="qualificationCategories"
+                                                           data-sectorid="@sector.Key"
+                                                           value="-1" />
+                                                    Other
+                                                </li>
+                                            </ul>
+                                        }
+                                    }
+                                </div>
+                                <div id="QualificationsPanelSpacerDiv2" class="QualificationsPanelSpacerDiv td">
+                                    &nbsp;
+                                </div>
+                                <div id="QualificationsPanelQualificationsDiv" class="td" style="display: none">
+                                    <h2 class="ui-widget-content">
+                                        <b style="margin-left: 23px">Qualifications</b>
+                                    </h2>
+                                    <div class="instructions"></div>
+                                    <div id="categoryDescription"></div>
+                                    @foreach (var marketSector in Model.ExperienceMarketSectors)
+                                    {
+                                        var sectorKey = marketSector.Value;
+                                        var qualificationCategories = Model.QualificationsByCategoryAndSector.FirstOrDefault(s => s.Key == sectorKey);
+
+                                        <div class="otherQualificationsDivForSector" id="@string.Format("OtherQualificationsDivForSector{0}", sectorKey)">
+                                            <input type="hidden" name="QualificationFreeTexts.Index" value="@sectorKey" />
+                                            <input type="hidden" name="QualificationFreeTexts[@sectorKey].MarketSectorId" value="@sectorKey" />
+                                            <textarea rows="10"
+                                                      style="width:100%"
+                                                      data-sector-id="@sectorKey"
+                                                      id="@string.Format("QualificationFreeTexts{0}FreeText", sectorKey)"
+                                                      name="QualificationFreeTexts[@sectorKey].FreeText"
+                                                      class="qualificationFreeTexts"></textarea>
+                                        </div>
+
+                                        if (qualificationCategories.Value != null)
+                                        {
+                                            foreach (QualificationCategory qualificationCategory in qualificationCategories.Value)
+                                            {
+                                                <ul style="display: none"
+                                                    class="qualifications"
+                                                    data-sector-id="@qualificationCategory.MarketSectorId"
+                                                    data-category-id="@qualificationCategory.QualificationCategoryId"
+                                                    data-category-description="@qualificationCategory.Description"
+                                                    id="@string.Format("qualificationsForCategory{0}", qualificationCategory.QualificationCategoryId)">
+                                                    @foreach (Qualification qualification in qualificationCategory.Qualifications)
+                                                    {
+                                                        <li>
+                                                            <input type="checkbox"
+                                                                   name="Qualifications"
+                                                                   value="@qualification.QualificationId" />@qualification.Name
+                                                            </li>
+                                                    }
+                                                </ul>
+                                            }
+                                        }
+                                    }
+                                </div>
+                                <div class="spacer" style="clear: both;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear">
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                Assessment
+                <div>
+                    <input type="button" id="addAssessment" name="addAssessment" value="Add Assessment Criteria" class="btn-dialog" />
+
+                    <div id="assessmentsGrid"></div>
+                </div>
+            </li>
+            <li>
+                Project
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Client Name</div>
+                            <div class="search-field"><input id="ClientId" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Project Name</div>
+                            <div class="search-field"><input id="ProjectId" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Requirement</div>
+                            <div class="search-field"><input id="RequirementId" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Role</div>
+                            <div class="search-field"><input id="RoleId" /></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li>
+                Visa
+                <div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Visa Type</div>
+                            <div class="search-field"><input id="VisaTypeId" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Expiry Start</div>
+                            <div class="search-field"><input id="VisaExpiryStart" /></div>
+                        </div>
+                    </div>
+                    <div class="search-row">
+                        <div class="search-cell">
+                            <div class="search-label">Expiry End</div>
+                            <div class="search-field"><input id="VisaExpiryEnd" /></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </form>
+
+    <input type="button" id="searchResetButton" name="searchResetButton" value="Reset" class="btn-dialog" />
+
+    <input type="button" id="search" name="search" value="Search" class="btn-submit" />
+
+    <div class="spacer">
+    </div>
+</div>
+
+
+<div id="searchInfo" class="k-block" style="display: block;height: 35px; margin-top: 5px; margin-bottom: 5px;">
+    <div style="float: right; margin-top: 2px; margin-right: 2px;">
+        <a class='k-button k-button-icontext k-grid-export' id="exportExcel" title='Export to Excel'>
+            <div class='k-icon'></div>Export
+        </a>
+    </div>
+    <div style="width:100px; float: left; margin-top: 5px;">
+        <input type='checkbox' id='chkSelectAllTop' onclick='CheckAll(this)' title="Select All" style="margin-top:10px" />Select All
+    </div>
+    <div style="width:150px; float: left; margin-top: 5px;">
+        <input type='checkbox' id='unchkSelectAllTop' onclick='UnCheckAll(this)' title="Clear Selection" style="margin-top:10px" />Clear Selection
+    </div>
+</div>
+
+
+<div id="searchResults" class=".searchResults">
+</div>
+
+@Html.Partial("_Prospect")
+
+<div style="clear: both"></div>
