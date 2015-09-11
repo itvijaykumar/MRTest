@@ -1,0 +1,6 @@
+Save 
+
+SampleView.cshtml as Phase3\Admin\Views\Search\Associate.cshtml
+SampleScript1.cs as Phase3\Admin\Scripts\Search-Associate.js
+
+
